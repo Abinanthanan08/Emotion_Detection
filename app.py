@@ -2,6 +2,7 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 import time
+import requests
 from model import detect_and_translate, predict_emotion, get_sentiment, get_language_name
 
 # Emojis for emotion display
@@ -144,11 +145,14 @@ if user_input.strip():
         )
 
         # Feedback
+        GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdhxeYH_fgDSjAi9nMbx5BJes23_-XJBg1mHviSpgXgKeBM_g/formResponse"
+        ENTRY_ID = "entry.1302998468"  # Use the correct entry ID from your form
+
         st.subheader("📝 Feedback")
         feedback_text = st.text_area("Your feedback:", height=100)
+
         if st.button("Submit Feedback"):
             if feedback_text.strip():
-                with open("user_feedback.txt", "a") as f:
-                    f.write(feedback_text + "\n---\n")
-                st.success("🙏 Thank you for your feedback! It has been saved.")
-
+                data = {ENTRY_ID: feedback_text}
+                requests.post(GOOGLE_FORM_URL, data=data)
+                st.success("🙏 Thank you! Your feedback was submitted.")
