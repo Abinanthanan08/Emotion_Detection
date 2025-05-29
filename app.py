@@ -146,7 +146,7 @@ if user_input.strip():
 
         # Feedback
         GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdhxeYH_fgDSjAi9nMbx5BJes23_-XJBg1mHviSpgXgKeBM_g/formResponse"
-        ENTRY_ID = "entry.1302998468"  # Use the correct entry ID from your form
+        ENTRY_ID = "entry.1302998468"
 
         st.subheader("📝 Feedback")
         feedback_text = st.text_area("Your feedback:", height=100)
@@ -154,5 +154,6 @@ if user_input.strip():
         if st.button("Submit Feedback"):
             if feedback_text.strip():
                 data = {ENTRY_ID: feedback_text}
-                requests.post(GOOGLE_FORM_URL, data=data)
-                st.success("🙏 Thank you! Your feedback was submitted.")
+                response = requests.post(GOOGLE_FORM_URL, data=data)
+                if response.status_code in [200, 302]:
+                    st.success("🙏 Thank you! Your feedback was submitted.")
